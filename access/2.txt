@@ -1,0 +1,37 @@
+
+
+
+            <table id="datatableSimple">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Contraseña</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Contraseña</th>
+                        <th>Acciones</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {users.map(user => (
+                        <tr key={user._id}>
+                            <th>{user.name}</th>
+                            <th>{user.email}</th>
+
+                            <th>{user.password}</th>
+
+                            <th>
+                                <Link className="btn btn-info  w-100 m-1" to={`/editadd?id=${user._id}`}>Editar</Link>
+                            </th>
+
+                        </tr>
+
+                    ))}
+                </tbody>
+            </table>

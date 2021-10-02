@@ -1,0 +1,206 @@
+import '../../node_modules/datatables.net-dt/css/jquery.dataTables.css'
+
+
+
+import React, { useState, useEffect } from 'react'
+
+
+import { useLocation } from "react-router-dom";
+
+const API = process.env.REACT_APP_BACK;
+
+
+
+export const Editadd = () => {
+    const [name, setName] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+
+    const [editando, setEditando] = useState(false)
+    const [ID, setID] = useState('false')
+
+    const [users, setUsers] = useState([])
+
+    const search = useLocation().search;
+    const id_get = new URLSearchParams(search).get('id');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        /*Notár que [`] en API son anormales*/
+        if (!editando) {
+            const res = await fetch(`${API}/users`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password
+                })
+            })
+            const data = await res.json();
+            console.log(data)
+        } else {
+            const resul = await fetch(`${API}/users/${ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password
+                })
+            })
+            const data = await resul.json()
+            console.log(data)
+
+            setEditando(false)
+            setID('')
+        }
+
+
+
+        await getUsers();
+
+        setName('');
+        setEmail('');
+        setPassword('');
+    }
+
+    const getUsers = async () => {
+        const res = await fetch(`${API}/users`)
+        const data = await res.json();
+        setUsers(data)
+    }
+
+    useEffect(() => {
+        getUsers();
+    }, [])
+
+
+
+
+    const editUser = async (id) => {
+
+        const resul = await fetch(`${API}/user/${id}`);
+        const data = await resul.json();
+
+        console.log(data)
+
+        setEditando(true);
+        setID(id)
+
+
+        setName(data.name)
+        setEmail(data.email)
+        setPassword(data.password)
+    }
+
+    const deleteUser = async (id) => {
+        const respuestaUsuario = window.confirm('¿Desea eliminar el usuario?')
+        if (respuestaUsuario) {
+            const resul = await fetch(`${API}/users/${id}`, {
+                method: 'DELETE'
+            })
+            const data = await resul.json();
+            console.log(data)
+            await getUsers();
+        }
+    }
+
+    const cancelInsertion = () => {
+        setEditando(false)
+        setID('')
+        setName('');
+        setEmail('');
+        setPassword('');
+    }
+
+    window.onload = function () {
+        editUser(id_get);
+    };
+
+    return (
+
+
+        <div className="mt-4" >
+
+            <div className="mx-auto">
+
+                <div classname="card text-center" style={{ marginLeft: '100px', marginRight: '100px' }}>
+
+
+                    <div className="card-header">
+                        Featured
+                    </div>
+                    <div className="card-body">
+                        <form>
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label htmlFor="inputEmail4">Email</label>
+                                    <input type="email" className="form-control" id="inputEmail4" placeholder="Email" />
+                                </div>
+                                <div className="form-group col-md-6">
+                                    <label htmlFor="inputPassword4">Password</label>
+                                    <input type="password" className="form-control" id="inputPassword4" placeholder="Password" />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="inputAddress">Address</label>
+                                <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="inputAddress2">Address 2</label>
+                                <input 	 className="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" />
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-md-6">
+                                    <label htmlFor="inputCity">City</label>
+                                    <input type="text" className="form-control" id="inputCity" />
+                                </div>
+                                <div className="form-group col-md-4">
+                                    <label htmlFor="inputState">State</label>
+                                    <select id="inputState" className="form-control">
+                                        <option selected>Choose...</option>
+                                        <option>...</option>
+                                    </select>
+                                </div>
+                                <div className="form-group col-md-2">
+                                    <label htmlFor="inputZip">Zip</label>
+                                    <input type="text" className="form-control" id="inputZip" />
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <div className="form-check">
+                                    <input className="form-check-input" type="checkbox" id="gridCheck" />
+                                    <label className="form-check-label" htmlFor="gridCheck">
+                                        Check me out
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" className="btn btn-primary">Sign in</button>
+                            <button
+                                className="btn btn-warning mt-2 mb-2"
+                                onClick={(e) => cancelInsertion()} >
+                                Cancelar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div >
+
+
+
+    )
+
+
+}
+	
