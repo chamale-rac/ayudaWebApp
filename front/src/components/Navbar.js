@@ -1,30 +1,80 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import churchlogo from './logo.png';
+import { useAuth0 } from '@auth0/auth0-react'
+
+export const Navbar = () => {
+
+    const { loginWithRedirect } = useAuth0()
+    const { user, isAuthenticated } = useAuth0();
 
 
-export const Navbar = () => (
+    const showNavbar = () => (
+        <div className="container d-flex justify-content-between align-items-center">
 
-    <header className="header-blue" style={{ background: '#ff8e4d', borderColor: 'rgb(21,132,244)', transform: 'perspective(0px) translate(0px)' }}>
-        <nav className="navbar navbar-dark navbar-expand-md navigation-clean-search" data-aos="fade" style={{ margin: 0, padding: '-40px 0px', paddingRight: '12px', paddingLeft: '12px' }}>
-            <div className="container-fluid"><Link className="navbar-brand border-dark" to="/" style={{ fontFamily: '"Source Sans Pro", sans-serif', fontSize: '32px', background: 'rgba(255,255,255,0)', borderColor: 'var(--bs-red)', transform: 'perspective(1560px) translate(0px) rotate(-6deg) scale(1.07) skew(-25deg)', transformStyle: 'preserve-3d', textDecoration: 'underline', color: 'var(--bs-light)' }}>4help</Link><button data-bs-toggle="collapse" className="navbar-toggler" data-bs-target="#navcol-1"><span className="visually-hidden">Toggle navigation</span><span className="navbar-toggler-icon" /></button>
-                <div className="collapse navbar-collapse" id="navcol-1">
-                    <ul className="navbar-nav">
-                        <li className="nav-item" />
-                        <li className="nav-item dropdown"><a className="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">Opciones</a>
-                            <div className="dropdown-menu">
-                                <Link className="dropdown-item" to="/editadd">Ingresar evento</Link>
-                                <Link className="dropdown-item" to="/users">Ver eventos</Link>
-                                <a className="dropdown-item" href="#">Mi perfil</a>
-                            </div>
+            <Link className="navbar-brand h1" to="/">
+                <i className="bx bx-pulse bx-sm text-dark" />
+                <span className="text-dark h4">4</span><span className="text-primary h4">Help</span>
+
+            </Link>
+            <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-toggler-success" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon" />
+            </button>
+            <div className="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbar-toggler-success">
+                <div className="flex-fill mx-xl-5 mb-2">
+                    <ul className="nav navbar-nav d-flex justify-content-between mx-xl-5 text-center text-dark">
+
+
+                        <li className="nav-item">
+                            <Link className="nav-link btn-outline-primary rounded-pill px-3" to="/add">Ask4</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link btn-outline-primary rounded-pill px-3" to="/posts">Help</Link>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link className="nav-link btn-outline-primary rounded-pill px-3" to="/myposts">My posts</Link>
+                        </li>
+
+
                     </ul>
-                    <form className="d-flex me-auto navbar-form" target="_self">
-                        <div className="d-flex align-items-center"><label className="form-label d-flex mb-0" htmlFor="search-field"><i className="fa fa-search" /></label><input className="form-control search-field" type="search" id="search-field" name="search" /></div>
-                    </form><span className="navbar-text"> <a className="login" href="#">Ingresar</a></span><a className="btn btn-light action-button" role="button" data-bss-hover-animate="swing" href="#">Registrarse</a>
+                </div>
+                <div className="navbar align-self-center d-flex">
+                    <a className="nav-link" href="#"><i className="bx bx-bell bx-sm bx-tada-hover text-primary" /></a>
+                    <Link className="nav-link" to="/log"><i className="bx bx-cog bx-sm text-primary" /></Link>
+                    <Link className="nav-link" to="/log"><i className="bx bx-user-circle bx-sm text-primary" /></Link>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
 
-)
+    )
+
+
+    const hideNavbar = () => (
+
+        <div className="container d-flex justify-content-between align-items-center">
+
+            <Link className="navbar-brand h1" to="/">
+                <i className="bx bx-pulse bx-sm text-dark" />
+                <span className="text-dark h4">4</span><span className="text-primary h4">Help</span>
+
+            </Link>
+            <div className="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbar-toggler-success">
+                <div className="flex-fill mx-xl-5 mb-2"></div>
+
+                <Link className="nav-link" onClick={() => loginWithRedirect()} ><i className="bx bx-user-circle bx-sm text-primary" /></Link>
+
+            </div>
+        </div>
+
+
+    )
+
+    return (
+        < nav id="main_nav" className="navbar navbar-expand-lg navbar-light bg-white shadow" >
+            {
+                isAuthenticated ? showNavbar() : hideNavbar()
+            }
+        </nav >
+
+    )
+}

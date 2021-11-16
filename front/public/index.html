@@ -9,28 +9,24 @@
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <title>Home - Brand</title>
-  <link rel="stylesheet" href="../components/index.css">
-  <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Alfa+Slab+One&amp;display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bitter:400,700&amp;display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald&amp;display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700&amp;display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css">
-  <link rel="stylesheet" href="/assets/css/Animated-rainbow-shadow.css">
-  <link rel="stylesheet" href="/assets/css/Header-Blue.css">
-  <link rel="stylesheet" href="/assets/css/Header-Dark.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+
+  <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+  <!-- Load Require CSS -->
+  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font CSS -->
+  <link href="assets/css/boxicon.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Load Tempalte CSS -->
+  <link rel="stylesheet" href="assets/css/templatemo.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/custom.css">
 
 
   <title>Go</title>
 </head>
 
-<body style="background: rgb(255, 142, 77); color: white;">
+<body">
 
   <div id="root">
   </div>
@@ -41,6 +37,36 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-</body>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <!-- Load jQuery require for isotope -->
+  <script src="assets/js/jquery.min.js"></script>
+  <!-- Isotope -->
+  <script src="assets/js/isotope.pkgd.js"></script>
+  <!-- Page Script -->
+  <script>
+    $(window).load(function () {
+      // init Isotope
+      var $projects = $('.projects').isotope({
+        itemSelector: '.project',
+        layoutMode: 'fitRows'
+      });
+      $(".filter-btn").click(function () {
+        var data_filter = $(this).attr("data-filter");
+        $projects.isotope({
+          filter: data_filter
+        });
+        $(".filter-btn").removeClass("active");
+        $(".filter-btn").removeClass("shadow");
+        $(this).addClass("active");
+        $(this).addClass("shadow");
+        return false;
+      });
+    });
+  </script>
+  <!-- Templatemo -->
+  <script src="assets/js/templatemo.js"></script>
+  <!-- Custom -->
+  <script src="assets/js/custom.js"></script>
+  </body>
 
 </html>
