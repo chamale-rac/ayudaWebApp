@@ -14,12 +14,11 @@ export const Navbar = () => {
             <Link className="navbar-brand h1" to="/">
                 <i className="bx bx-pulse bx-sm text-dark" />
                 <span className="text-dark h4">4</span><span className="text-primary h4">Help</span>
-
             </Link>
-            <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-toggler-success" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button className="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarx" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon" />
             </button>
-            <div className="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbar-toggler-success">
+            <div className="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbarx">
                 <div className="flex-fill mx-xl-5 mb-2">
                     <ul className="nav navbar-nav d-flex justify-content-between mx-xl-5 text-center text-dark">
 
@@ -31,6 +30,7 @@ export const Navbar = () => {
                             <Link className="nav-link btn-outline-primary rounded-pill px-3" to="/posts">Help</Link>
                         </li>
 
+
                         <li className="nav-item">
                             <Link className="nav-link btn-outline-primary rounded-pill px-3" to="/myposts">My posts</Link>
                         </li>
@@ -39,9 +39,8 @@ export const Navbar = () => {
                     </ul>
                 </div>
                 <div className="navbar align-self-center d-flex">
-                    <a className="nav-link" href="#"><i className="bx bx-bell bx-sm bx-tada-hover text-primary" /></a>
-                    <Link className="nav-link" to="/log"><i className="bx bx-cog bx-sm text-primary" /></Link>
-                    <Link className="nav-link" to="/log"><i className="bx bx-user-circle bx-sm text-primary" /></Link>
+
+                    <Link className="nav-link" to={`/profile?p=${user.email}`} ><i className="bx bx-user-circle bx-sm text-primary" /></Link>
                 </div>
             </div>
         </div>
@@ -70,7 +69,8 @@ export const Navbar = () => {
     )
 
     return (
-        < nav id="main_nav" className="navbar navbar-expand-lg navbar-light bg-white shadow" >
+
+        < nav id="main_nav" class="navbar navbar-expand-lg navbar-light bg-white shadow">
             {
                 isAuthenticated ? showNavbar() : hideNavbar()
             }

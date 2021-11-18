@@ -1,162 +1,263 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react'
 
-export const profile = () => (
-<div className="container">
-  <div className="row">
-    <div className="col-md-12">
-      <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
-      <div className="container">
-        <div className="row">
-          <div className="col-md-12">
-            <div id="content" className="content content-full-width">
-              <div className="profile">
-                <div className="profile-header">
-                  <div className="profile-header-cover" />
-                  <div className="profile-header-content">
-                    <div className="profile-header-img">
-                      <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="" />
-                    </div>
-                    <div className="profile-header-info">
-                      <h4 className="m-t-10 m-b-5">Pablo</h4>
-                      <p className="m-b-10">Ayudante</p>
-                      <a href="#" className="btn btn-xs btn-success">Editar perfil</a>
+
+import { Link } from 'react-router-dom'
+
+
+import { useAuth0 } from '@auth0/auth0-react';
+
+
+const API = process.env.REACT_APP_BACK;
+
+export const Profile = () => {
+
+
+  const { logout, user } = useAuth0();
+
+  const url_str = window.location.href
+  const url = new URL(url_str);
+  const param = url.searchParams.get("p");
+
+
+  const [rels, setRel] = useState([])
+  const [posts, setPosts] = useState([])
+  const [yes, setY] = useState("");
+
+
+
+  const getPosts = async () => {
+    const res = await fetch(`${API}/users`)
+    const data = await res.json();
+    setPosts(data);
+  }
+
+  const getRelations = async () => {
+    const res = await fetch(`${API}/relations`)
+    const data = await res.json();
+    setRel(data);
+  }
+
+  const handleSubmit = async () => {
+
+    const seguidor = user.name;
+    const seguido = param;
+    const res = fetch(`${API}/relations`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        seguidor,
+        seguido
+      }),
+    })
+      .then(res => {
+        console.log("response: ", res);
+
+        setY("");
+      })
+      .catch(err => {
+        console.log("error:", err);
+      })
+    setTimeout(function () { getRelations(); }, 500);
+  }
+
+  const deleteFollow = async (id) => {
+
+    console.log(id)
+    const userResponse = window.confirm("¿Estás seguro de dejar de seguir?");
+    if (userResponse) {
+      const res = await fetch(`${API}/relations/${id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      console.log(data);
+
+
+      setTimeout(function () { getRelations(); }, 500);
+    }
+  };
+
+  function wiew(array, seguidox, seguidorx) {
+    console.log(array.length);
+    let res = array.filter((val) => {
+      console.log(val)
+      if (val.seguidor === seguidorx) {
+        if (val.seguido === seguidox) {
+          return val
+        }
+      }
+    }
+    ).length;
+
+    let x = res;
+    console.log(x);
+
+    if (parseInt(x) === parseInt(0)) {
+      const x = new Boolean(true);
+
+      console.log("x" + x);
+      return (x);
+    } else {
+      const x = new Boolean(false);
+
+      console.log("x" + x);
+      return (x);
+    }
+  }
+
+  useEffect(() => {
+
+    getRelations();
+    getPosts();
+  }, [])
+
+
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-md-12">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div id="content" className="content content-full-width">
+                  <div className="profile">
+                    <div className="profile-header">
+                      <div className="profile-header-cover" />
+                      <div className="profile-header-content">
+                        <div className="profile-header-img">
+                          <img src="https://drive.google.com/uc?export=view&id=1_JQRSCnyjaRVepXUdFvo-ZkDPojcVoGa" alt="" />
+                        </div>
+                        <div className="profile-header-info">
+                          <h4 className="m-t-10 m-b-5">{param}</h4>
+                          <br></br>
+                          <p className="m-b-10"></p>
+
+                          {(param === user.email) ?
+                            <button onClick={(e) => logout({ returnTo: window.location.origin })} className="btn btn-xs btn-success">Logout</button>
+                            :
+                            <div>
+                              {
+                                ((rels.filter((val) => {
+                                  console.log(val)
+                                  if (val.seguidor === user.email) {
+                                    if (val.seguido === param) {
+                                      return val
+                                    }
+                                  }
+                                }
+                                ).length) === 1) ?
+                                  rels.filter((val) => {
+                                    if (val.seguidor === user.email) {
+                                      if (val.seguido === param) {
+                                        return val
+                                      }
+                                    }
+                                  }).map((post, key) => (
+                                    < button onClick={(e) => deleteFollow(post._id)} className="btn btn-xs btn-success">Dejar de seguir</button>
+                                  )) : <button onClick={(e) => handleSubmit()} className="btn btn-xs btn-success">Seguir</button>
+                              }
+                            </div>}
+
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <ul className="profile-header-tab nav nav-tabs">
-                    <li className="nav-item"><a href="#profile-post" className="nav-link" data-toggle="tab">Ayudas</a></li>
-                    <li className="nav-item"><a href="#profile-about" className="nav-link active show" data-toggle="tab">Información general</a></li>
-                    <li className="nav-item"><a href="#profile-photos" className="nav-link" data-toggle="tab">Fotos</a></li>
-                    <li className="nav-item"><a href="#profile-videos" className="nav-link" data-toggle="tab">Videos</a></li>
-                    <li className="nav-item"><a href="#profile-friends" className="nav-link" data-toggle="tab">Contactar</a></li>
-                  </ul>
-                </div>
-              </div>
-              <div className="profile-content">
-                <div className="tab-content p-0">
-                  <div className="tab-pane fade in active show" id="profile-about">
-                    <div className="table-responsive">
-                      <table className="table table-profile">
-                        <thead>
-                          <tr>
-                            <th />
-                            <th>
-                              <h4>Pablo    Leal <small>Estudiante UVG</small></h4>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="highlight">
-                            <td className="field">Estado</td>
-                            <td><a href="javascript:;">Añade tu estado</a></td>
-                          </tr>
-                          <tr className="divider">
-                            <td colSpan={2} />
-                          </tr>
-                          <tr>
-                            <td className="field">Telefono</td>
-                            <td><i className="fa fa-mobile fa-lg m-r-5" /> +502 30454323 <a href="javascript:;" className="m-l-5">Edit</a></td>
-                          </tr>
-                          <tr>
-                            <td className="field">Numero alternativo</td>
-                            <td><a href="javascript:;">Añadir numero</a></td>
-                          </tr>
-                          <tr>
-                            <td className="field">Numero de trabajo</td>
-                            <td><a href="javascript:;">Añadir numero</a></td>
-                          </tr>
-                          <tr className="divider">
-                            <td colSpan={2} />
-                          </tr>
-                          <tr className="highlight">
-                            <td className="field">Sobre mi</td>
-                            <td><a href="javascript:;">Añade descripcion</a></td>
-                          </tr>
-                          <tr className="divider">
-                            <td colSpan={2} />
-                          </tr>
-                          <tr>
-                            <td className="field">Departamento</td>
-                            <td>
-                              <select className="form-control input-inline input-xs" name="region">
-                                <option value="US" selected>Guatemala</option>
-                                <option value="AF">Peten</option>
-                                <option value="AL">Huehuetango</option>
-                                <option value="DZ">Izabal</option>
-                                <option value="AS">Escuintla</option>
-                                <option value="AD">Baja Verapaz</option>
-                                <option value="AO">Alta Verapaz</option>
-                                <option value="AI">Quiche</option>
-                                <option value="AQ">Solola</option>
-                                <option value="AG">San Marcos</option>
-                              </select>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="field">Municipio</td>
-                            <td>Ciudad</td>
-                          </tr>
-                          <tr>
-                            <td className="field">Zona</td>
-                            <td><a href="javascript:;">Añadir zona</a></td>
-                          </tr>
-                          <tr>
-                            <td className="field">Sitio web</td>
-                            <td><a href="javascript:;">Añade tu sitio web</a></td>
-                          </tr>
-                          <tr>
-                            <td className="field">Genero</td>
-                            <td>
-                              <select className="form-control input-inline input-xs" name="gender">
-                                <option value="male">Masculino</option>
-                                <option value="female">Femenino</option>
-                              </select>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="field">Fecha de nacimiento</td>
-                            <td>
-                              <select className="form-control input-inline input-xs" name="day">
-                                <option value={04} selected>06</option>
-                              </select>
-                              -
-                              <select className="form-control input-inline input-xs" name="month">
-                                <option value={11} selected>09</option>
-                              </select>
-                              -
-                              <select className="form-control input-inline input-xs" name="year">
-                                <option value={1989} selected>2001</option>
-                              </select>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td className="field">Idioma</td>
-                            <td>
-                              <select className="form-control input-inline input-xs" name="language">
-                                <option value selected>Español</option>
-                              </select>
-                            </td>
-                          </tr>
-                          <tr className="divider">
-                            <td colSpan={2} />
-                          </tr>
-                          <tr className="highlight">
-                            <td className="field">&nbsp;</td>
-                            <td className="p-t-10 p-b-10">
-                              <button type="submit" className="btn btn-primary width-150">Actualizar datos</button>
-                              <button type="submit" className="btn btn-white btn-white-without-border width-150 m-l-5">Cancelar</button>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                  <div className="profile-content">
+                    <ul className="nav nav-tabs" id="myTab" role="tablist">
+                      <li className="nav-item" role="presentation">
+                        <button className="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Posts</button>
+                      </li>
+                      <li className="nav-item" role="presentation">
+                        <button className="nav-link" id="follower-tab" data-bs-toggle="tab" data-bs-target="#follower" type="button" role="tab" aria-controls="follower" aria-selected="false">Seguidores</button>
+                      </li>
+
+                      <li className="nav-item" role="presentation">
+                        <button className="nav-link" id="following-tab" data-bs-toggle="tab" data-bs-target="#following" type="button" role="tab" aria-controls="following" aria-selected="false">Seguidos</button>
+                      </li>
+
+
+                    </ul>
+                    <div className="tab-content" id="myTabContent">
+                      <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                        <div className="row projects gx-lg-5">
+
+                          {posts.filter((val) => {
+                            if (val.creator === param) {
+                              return val
+                            }
+                          }).map((post, key) => (
+                            <div className="col-sm-6 col-lg-4 text-decoration-none" key={key}>
+                              <div className="service-work overflow-hidden card mb-5 mx-5 m-sm-4">
+                                <img className="card-img-top" src={post.file} alt="..." />
+                                <div className="card-body">
+                                  <h5 className="card-title light-300 text-dark">{post.title} <i class={(post.sta === "En_progreso") ? 'bx bxs-checkbox-checked' : 'bx bxs-x-square'}></i></h5>
+                                  <p className="card-text light-300 text-primary" style={{ color: "red" }}>
+                                    Creado por: <Link to={`/profile?p=${post.creator}`}> {post.creator} </Link>
+                                  </p>
+                                  <p>{(post.ticket1 === "") ? '' : `#${post.ticket1} `}
+                                    {(post.ticket2 === "") ? '' : `#${post.ticket2}`}
+                                  </p>
+                                  <Link to={`/indiv?p=${post._id}`} className="text-decoration-none text-primary light-300">
+                                    Ver más...
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          ))
+                          }
+
+                        </div>
+
+
+                      </div>
+                      <div className="tab-pane fade" id="follower" role="tabpanel" aria-labelledby="follower-tab">
+                        {
+
+                          rels.filter((val) => {
+                            if (val.seguido === param) {
+                              return val
+                            } else if (val.seguidor === "") {
+                              if (val.seguido === "") {
+                                return val
+                              }
+                            }
+                          }).map((post, key) => (
+                            <div>
+                              <Link to={`/profile?p=${post.seguidor}`}> {post.seguidor} </Link>
+                            </div>
+                          ))
+                        }
+
+                      </div>
+                      <div className="tab-pane fade" id="following" role="tabpanel" aria-labelledby="following-tab">
+                        {
+
+                          rels.filter((val) => {
+                            if (val.seguidor === param) {
+                              return val
+                            } else if (val.seguidor === "") {
+                              if (val.seguido === "") {
+                                return val
+                              }
+                            }
+                          }).map((post, key) => (
+                            <div>
+                              <Link to={`/profile?p=${post.seguido}`}> {post.seguido} </Link>
+                            </div>
+                          ))
+                        }
+                      </div>
                     </div>
-                    4                </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-)
+    </div >
+
+  )
+}

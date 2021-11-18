@@ -17,6 +17,8 @@ export const Add = () => {
     const [location, setLocation] = useState("");
     const [descrip, setDescrip] = useState("");
 
+    const [sta, setSta] = useState("En_progreso");
+
     const [ticket1, setTicket1] = useState("");
     const [ticket2, setTicket2] = useState("");
 
@@ -24,6 +26,7 @@ export const Add = () => {
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
+
 
     const titleInput = useRef(null);
 
@@ -43,6 +46,10 @@ export const Add = () => {
                 title,
                 location,
                 descrip,
+                file,
+                ticket1,
+                ticket2,
+                sta
             }),
         })
             .then(res => {
@@ -61,6 +68,7 @@ export const Add = () => {
         setFile('');
 
 
+        document.getElementById("exampleCheck1").checked = false;
         //        await res.json();
 
 
@@ -124,6 +132,20 @@ export const Add = () => {
                     </div>
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
+
+                            <div className="form-group mb-4">
+                                <label className="form-label mt-4 ">Estado</label >
+                                <input
+                                    type="text"
+                                    onChange={e => setSta(e.target.value)}
+                                    value={sta}
+                                    className="form-control"
+                                    placeholder="Inserte nombre"
+                                    autoFocus
+                                    readOnly
+                                />
+                            </div>
+
                             <div className="form-group">
                                 <label className="form-label mt-4">Nombre del evento*</label>
                                 <input
@@ -145,7 +167,7 @@ export const Add = () => {
                                     value={location}
                                     className="form-control"
                                     placeholder="Inserte ubicación"
-                                    autoFocus
+
                                     required
                                 />
                             </div>
@@ -159,7 +181,7 @@ export const Add = () => {
                                     value={descrip}
                                     className="form-control mb-4"
                                     placeholder="Escriba una breve descripción del evento"
-                                    autoFocus
+
                                     rows={3} required />
 
                             </div>
@@ -195,7 +217,6 @@ export const Add = () => {
                                     <input type="text"
                                         onChange={e => setTicket1(e.target.value)}
                                         value={ticket1}
-                                        autoFocus
                                         className="form-control mb-1"
                                         placeholder="Etiqueta 1" />
                                 </div>
@@ -203,7 +224,6 @@ export const Add = () => {
                                     <input type="text"
                                         onChange={e => setTicket2(e.target.value)}
                                         value={ticket2}
-                                        autoFocus
                                         className="form-control mb-1"
                                         placeholder="Etiqueta 2" />
                                 </div>

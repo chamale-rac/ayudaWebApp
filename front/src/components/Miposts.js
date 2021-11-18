@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 
 import { useAuth0 } from '@auth0/auth0-react'
 
+
+import FileBase64 from 'react-file-base64';
+
 const API = process.env.REACT_APP_BACK;
 
 
@@ -18,6 +21,8 @@ export const Miposts = () => {
     const [ticket2, setTicket2] = useState("");
 
     const [file, setFile] = useState("");
+
+    const [sta, setState] = useState("");
 
     const [editing, setEditing] = useState(false);
     const [id, setId] = useState("");
@@ -44,6 +49,10 @@ export const Miposts = () => {
                     title,
                     location,
                     descrip,
+                    file,
+                    ticket1,
+                    ticket2,
+                    sta
                 }),
             })
                 .then(res => {
@@ -64,6 +73,8 @@ export const Miposts = () => {
         setTicket1('');
         setTicket2('');
         setFile('');
+
+        setState('');
         titleInput.current.focus();
     };
 
@@ -96,12 +107,13 @@ export const Miposts = () => {
         setTitle(data.title);
         setLocation(data.location);
         setDescrip(data.descrip);
+        setTicket1(data.ticket1);
+        setTicket2(data.ticket2);
+        setFile(data.file);
+        setState(data.sta)
         titleInput.current.focus();
     };
 
-    const pass = () => (
-        console.log("JS")
-    )
 
     useEffect(() => {
         getUsers();
@@ -118,6 +130,7 @@ export const Miposts = () => {
         setTicket1('');
         setTicket2('');
         setFile('');
+        setState('');
     }
     return (
         <div className="row">
@@ -133,9 +146,14 @@ export const Miposts = () => {
 
                     <div className="form-group mb-4">
                         <label className="form-label mt-4 ">Estado</label >
-                        <select class="form-control">
+                        <select class="form-control"
+                            type="text"
+                            onChange={e => setState(e.target.value)}
+                            value={sta}
+                            className="form-control"
+                            autoFocus>
                             <option></option>
-                            <option>En progreso</option>
+                            <option>En_progreso</option>
                             <option>Resuelto</option>
                         </select>
                     </div>
@@ -180,13 +198,15 @@ export const Miposts = () => {
 
                     <div className="form-group">
 
-                        <label className="form-label mt-4 ">Actualizar imagen</label >
+                        <label className="form-label mt-4 ">Actualizar imagen </label >
 
                         <br />
-                        <input type="file" className="form-control-file" id="exampleFormControlFile1"
-
-                            onChange={e => setFile(e.target.value)}
-                            value={file} />
+                        <FileBase64
+                            multiple={false}
+                            onDone={({ base64 }) => setFile(base64)}
+                            //onChange={e => setFile(e.target.value)}
+                            value={file}
+                        />
                     </div>
 
 
@@ -254,7 +274,7 @@ export const Miposts = () => {
                                         </button>
                                     </td>
                                 </tr>
-                                : pass()
+                                : ''
 
                         ))}
                     </tbody>
